@@ -2,6 +2,7 @@ import axios from 'axios';
 import fs from 'fs';
 import { OpenAiService } from '../../services/open-ai.service';
 import { AiDevsService } from '../../services/ai-devs.service';
+import { Langfuse } from "langfuse";
 
 const url = 'https://centrala.ag3nts.org/data/1331d14c-2db6-4895-ad7c-fa1e68437741/cenzura.txt';
 
@@ -15,6 +16,14 @@ const fetchFileContent = async (url: string): Promise<string> => {
     }
 };
 
+
+
+const langfuse = new Langfuse({
+  secretKey: process.env.LANGFUSE_SECRET_KEY,
+  publicKey: process.env.LANGFUSE_PUBLIC_KEY,
+  baseUrl: process.env.LANGFUSE_HOST,
+});
+
 let forCensoring: string = '';
 
 fetchFileContent(url).then(async content => {
@@ -22,11 +31,11 @@ fetchFileContent(url).then(async content => {
     console.log('File content fetched successfully');
 
     console.log(forCensoring);
-    /*const aiService = new OpenAiService();
+    const aiService = new OpenAiService("CENZURA");
     const censoredFile: string = await aiService.getAnswer(`Youre only job is to censore personal information. User will send to you
         data with personal information like name surname or age or different. You have to replace personal information with word CENZURA.
-        You can not chage the structure of texxt that user sended to you. You can not sent to user other info than censored text.`, [forCensoring])??'';*/
-    const aiService = new AiDevsService();
+        You can not chage the structure of texxt that user sended to you. You can not sent to user other info than censored text.`, [forCensoring])??'';
+    /*const aiService = new AiDevsService();
     const censoredFile: string = await aiService.getAnswerFromLocalAI(`Youre only job is to censore personal information in polish. User will send to you
         data with personal information like name, surname, age or location. 
         - You have to replace personal information with word CENZURA.
@@ -43,7 +52,7 @@ fetchFileContent(url).then(async content => {
 
         Example: Adres: Bydgoszcz, ul. Średnia 2.
         Result: Adres: CENZURA, ul. CENZURA.
-        `, forCensoring);
+        `, forCensoring);*/
     
     console.log(censoredFile);
 

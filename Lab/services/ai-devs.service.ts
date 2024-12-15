@@ -2,7 +2,7 @@ import axios from "axios";
 
 export class AiDevsService {
 
-  public async sendAnswer(taskName: string, answerValue: string): Promise<string> {
+  public async sendAnswer(taskName: string, answerValue: any): Promise<any> {
     const answer = {
       task: taskName,
       answer: answerValue,
@@ -21,7 +21,15 @@ export class AiDevsService {
 
       return response.data;
     } catch (postErr) {
-      console.error('Error posting data:', postErr);
+      if (axios.isAxiosError(postErr)) {
+        if (postErr.response && postErr.response.data) {
+          console.error('BadRequest error:', postErr.response.data);
+        } else {
+          console.error('Axios error posting data:', postErr);
+        }
+      } else {
+        console.error('Unexpected error posting data:', postErr);
+      }
     }
 
     return 'ERROR';
@@ -43,6 +51,25 @@ export class AiDevsService {
       return response.data.response;
     } catch (postErr) {
       console.error('Error posting data to local AI:', postErr);
+    }
+
+    return 'ERROR';
+  }
+
+  public async sendCustomAnswer(taskName: string, answerObject: any): Promise<string> {
+    const answer_url = 'https://centrala.ag3nts.org/report';
+    try {
+      const response = await axios.post(answer_url, answerObject, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Response from server:', response.data);
+
+      return response.data;
+    } catch (postErr) {
+      console.error('Error posting data:', postErr);
     }
 
     return 'ERROR';
