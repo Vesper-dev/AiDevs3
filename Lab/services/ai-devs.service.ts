@@ -24,11 +24,14 @@ export class AiDevsService {
       if (axios.isAxiosError(postErr)) {
         if (postErr.response && postErr.response.data) {
           console.error('BadRequest error:', postErr.response.data);
+          return postErr.response.data;
         } else {
           console.error('Axios error posting data:', postErr);
+          return postErr;
         }
       } else {
         console.error('Unexpected error posting data:', postErr);
+        return postErr;
       }
     }
 

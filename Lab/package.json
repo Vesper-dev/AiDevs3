@@ -24,6 +24,7 @@
     "langfuse": "^3.30.3",
     "neo4j-driver": "^5.27.0",
     "openai": "^4.71.0",
+    "pdf-poppler": "^0.2.1",
     "promptfoo": "^0.95.0",
     "puppeteer": "^23.7.0"
   }
